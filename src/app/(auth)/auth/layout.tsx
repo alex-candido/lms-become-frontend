@@ -8,8 +8,8 @@ export default async function SetupLayout({
 }) {
   const session = await getAuthSession();
 
-  if (!session?.user) {
-    return redirect("/auth/sign-in");
+  if (session?.user) {
+    return redirect("/");
   }
   return (
     <>{children}</>

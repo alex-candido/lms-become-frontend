@@ -1,6 +1,7 @@
+
 import SignInSection from "@/components/auth/sign-in/SignInSection";
 
-const SignInPage = () => {
+export default function SignInPage() {
   return (
     <div className="lms-sign-in-page h-screen">
       <SignInSection />
@@ -8,4 +9,3 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;

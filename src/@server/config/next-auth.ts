@@ -4,12 +4,16 @@ import {
   type NextAuthOptions,
 } from 'next-auth';
 
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { JWT } from 'next-auth/jwt';
 
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
 import { env } from '@/@server/config/env-schema';
+import { api } from '@/lib/api';
+import axios from 'axios';
+import prisma from './data-source';
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
@@ -26,23 +30,21 @@ declare module 'next-auth/jwt' {
 }
 
 async function refreshToken(token: JWT | any): Promise<JWT> {
-  const res = await fetch(env.NEXT_BASE_URL_API + '/auth/refresh', {
+  const res = await axios.post(env.NEXT_BASE_URL_API + '/auth/refresh', {
     method: 'POST',
     headers: {
       authorization: `Refresh ${token.backendTokens.refreshToken}`,
     },
   });
-  console.log('REFRESH');
-
-  const response = await res.json();
 
   return {
     ...token,
-    backendTokens: response,
+    backendTokens: res.data,
   };
 }
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID as string,
@@ -55,80 +57,118 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'password', type: 'password' },
       },
       async authorize(credentials, _req) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Invalid credentials');
-        }
+        if (!credentials) return null;
 
         const { email, password } = credentials;
 
-        const res = await fetch(env.NEXT_BASE_URL_API + '/auth/login', {
-          method: 'POST',
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        console.log(credentials)
 
-        if (res.status == 401) {
-          console.log(res.statusText);
-          throw new Error('Invalid credentials');
+        if (!email || !password) {
+          throw new Error('Email and password are required');
         }
 
-        const user = await res.json();
+        const auth = await api.post('/auth/login', {
+          email,
+          password,
+        });
 
-        return user;
+        if (!auth || auth.status == 401) {
+          console.log(auth.statusText);
+          throw new Error(
+            'Authentication failed: Invalid credentials or user not found',
+          );
+        }
+
+        return auth.data;
       },
     }),
   ],
   callbacks: {
-    // Use o signIn()retorno de chamada para controlar se um usuário tem permissão para fazer login.
-    // Ao usar o CredentialsProvider, o user objeto é a resposta retornada do authorize retorno de chamada e o profile objeto é o corpo bruto do HTTP POSTenvio.
-    signIn: async ({ user, profile, account }) => {
-      if (user && account?.provider === 'google') {
-        console.log({
-          user,
-          profile
-        })
+    signIn: async ({ user, profile: _profile, account }) => {
+      if (account?.provider === 'google') {
+        console.log('\nSIGN_IN: GOOGLE\n');
+        if (user) {
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              id: user.id,
+            },
+          });
+          if (!existingUser?.emailVerified) return false;
+        }
       }
-      return true
-    },
-    // jwt: Esse retorno de chamada é chamado sempre que um JSON Web Token é criado (ou seja, no login) ou atualizado (ou seja, sempre que uma sessão é acessada no cliente). O valor retornado será criptografado e armazenado em um cookie.
-    // JSON Web Tokens podem ser usados ​​para tokens de sessão se habilitados com session: { strategy: "jwt" }a opção. JSON Web Tokens serão ativados por padrão se você não tiver especificado um adaptador. JSON Web Tokens são criptografados (JWE) por padrão. Recomendamos que você mantenha esse comportamento. Consulte a opção Substituir JWT encodee decodemétodos avançados.
-    // Os argumentos user , account , profile e isNewUser só são passados ​​na primeira vez que esse callback for chamado em uma nova sessão, após o login do usuário. Nas chamadas subsequentes, somente token estará disponível.
-    jwt: async ({ token, account: account, profile: profile }) => {
-      if (account && account.provider == 'google') {
-        token.accessToken = account.access_token
-        token.email = profile?.email
-      } else {
-        token.accessToken = account?.access_token
-        token.email = profile?.email
+      if (account?.provider === 'credentials') {
+        console.log('\nSIGN_IN: CREDENTIALS\n');
+        // if (user) {
+        //   const existingUser = await prisma.user.findUnique({
+        //     where: {
+        //       email: String(user?.email),
+        //     },
+        //   });
+        //   if (!existingUser) return false;
+        // }
       }
-      return token
+      return true;
     },
-    // O retorno de chamada da sessão é chamado sempre que uma sessão é verificada. Por padrão, apenas um subconjunto do token é retornado para aumentar a segurança . Se você quiser disponibilizar algo que adicionou ao token (como access_tokene user.idacima) por meio do jwt()retorno de chamada, você deve encaminhá-lo explicitamente aqui para disponibilizá-lo ao cliente.
+    jwt: async ({ token, account, profile: _profile, user: _user }) => {
+      if (account?.provider === 'google') {
+        console.log('\nJWT: GOOGLE\n');
+        if (token) {
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              email: String(token.email),
+            },
+          });
 
+          token.name = existingUser?.name;
+          token.email = existingUser?.email;
+          token.role = existingUser?.role;
+          token.accessToken = account.access_token;
+        }
+        return token;
+      }
+
+      if (account?.provider === 'credentials') {
+        console.log('\nJWT: CREDENTIALS\n');
+        // if (token) {
+        //   const existingUser = await prisma.user.findUnique({
+        //     where: {
+        //       email: String(token.email),
+        //     },
+        //   });
+
+        //   token.name = existingUser?.name;
+        //   token.email = existingUser?.email;
+        //   token.role = existingUser?.role;
+        //   token.accessToken = account.access_token;
+        // }
+
+        return await refreshToken(token);
+      }
+
+      return token;
+    },
     session: async ({ session, token }) => {
       if (token) {
-        if (token.provider === 'google') {
-          session.user.id = token.id;
-          session.user.name = token.name;
-          session.user.email = token.email;
-          session.user.image = token.picture;
-        } else {
-          session.user.id = token.id;
-          session.user.name = token.name;
-          session.user.email = token.email;
-        }
+        console.log('\nJWT: SESSION\n');
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
       }
       return session;
     },
   },
+  pages: {
+    signIn: '/auth/sign-in',
+    signOut: '/',
+    error: '/auth/error',
+    newUser: '/auth/sign-up'
+  },
   debug: true,
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   jwt: {
     secret: process.env.NEXTAUTH_JWT_SECRET,

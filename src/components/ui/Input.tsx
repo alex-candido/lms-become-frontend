@@ -13,7 +13,7 @@ interface InputProps extends ComponentProps<'div'>  {
 const Input: React.FC<InputProps> = ({
   placeholder,
   value,
-  type = 'text',
+  type,
   onChange,
   disabled,
   label,

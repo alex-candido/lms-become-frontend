@@ -9,6 +9,8 @@ import AuthForm from '@/components/forms/AuthForm';
 import Container from '@/components/layout/Container';
 import Section from '@/components/layout/Section';
 import Input from '@/components/ui/Input';
+
+import { api } from '@/lib/api';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -31,21 +33,21 @@ const SignInUpSection: React.FC<SignInUpSectionProps> = ({
     try {
       setIsLoading(true);
 
-      console.log({
+      await api.post('/auth/register', {
         email,
         password,
         username,
         name,
       });
 
-      setIsLoading(false);
-
-      signIn('credentials', {
-        email,
-        password,
-      });
+      setIsLoading(false)
 
       toast.success('Account created.');
+
+      await signIn('credentials', {
+        email,
+        password,
+      })
     } catch (error) {
       toast.error('Something went wrong');
     } finally {
@@ -57,7 +59,7 @@ const SignInUpSection: React.FC<SignInUpSectionProps> = ({
     <div className="text-neutral-400 text-center">
       <p>Already have an account?</p>
       <span
-        onClick={() => router.push(`/sign-in`)}
+        onClick={() => router.push(`/auth/sign-in`)}
         className="text-white cursor-pointer hover:underline"
       >
         Sing in
@@ -72,7 +74,7 @@ const SignInUpSection: React.FC<SignInUpSectionProps> = ({
           <div className="sign-in-container w-full h-full flex justify-center items-center">
             <AuthForm
               title="Create an account"
-              actionLabel="Register"
+              actionLabel="Sign Up"
               disabled={isLoading}
               onSubmit={onSubmit}
               footer={footerContent}

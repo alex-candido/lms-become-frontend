@@ -46,7 +46,7 @@ const SignInSection: React.FC<SignInSectionSectionProps> = ({
     <div className="text-neutral-400 text-center">
       <p>First time using LMS?</p>
       <span
-        onClick={() => router.push(`/sign-up`)}
+        onClick={() => router.push(`/auth/sign-up`)}
         className="text-white cursor-pointer hover:underline"
       >
         Create an account
