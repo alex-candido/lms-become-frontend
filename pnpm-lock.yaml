@@ -53,6 +53,9 @@ dependencies:
   tailwind-merge:
     specifier: ^2.2.1
     version: 2.2.1
+  validation:
+    specifier: ^0.0.1
+    version: 0.0.1
   zustand:
     specifier: ^4.5.1
     version: 4.5.2(@types/react@18.2.61)(react@18.2.0)
@@ -3120,6 +3123,10 @@ packages:
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
+    dev: false
+
+  /validation@0.0.1:
+    resolution: {integrity: sha512-wddkc+W23TtYJbBQNZc3vxfDXB/nkolCpCOkX/W5tSyK1hQenEHV7ZiAf3OR6N96a9+wzX7zsw3uSCfoTJgCyg==}
     dev: false
 
   /which-boxed-primitive@1.0.2:

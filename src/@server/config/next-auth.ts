@@ -12,6 +12,8 @@ import GoogleProvider from 'next-auth/providers/google';
 
 import { env } from '@/@server/config/env-schema';
 import { api } from '@/lib/api';
+
+import { Prisma } from '@prisma/client';
 import axios from 'axios';
 import prisma from './data-source';
 
@@ -57,34 +59,43 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'password', type: 'password' },
       },
       async authorize(credentials, _req) {
-        if (!credentials) return null;
+        try {
+          if (!credentials) return null;
 
-        const { email, password } = credentials;
+          const { email, password } = credentials;
 
-        console.log(credentials)
+          if (!email || !password) {
+            throw new Error('Email and password are required');
+          }
 
-        if (!email || !password) {
-          throw new Error('Email and password are required');
+          const auth = await api.post('/auth/login', {
+            email,
+            password,
+          });
+
+          if (!auth || auth.status == 401) {
+            console.log(auth.statusText);
+            throw new Error(
+              'Authentication failed: Invalid credentials or user not found',
+            );
+          }
+
+          return auth.data;
+        } catch (error) {
+          if (
+            error instanceof Prisma.PrismaClientInitializationError ||
+            error instanceof Prisma.PrismaClientKnownRequestError
+          ) {
+            throw new Error('System error. Please contact support');
+          }
+
+          throw error;
         }
-
-        const auth = await api.post('/auth/login', {
-          email,
-          password,
-        });
-
-        if (!auth || auth.status == 401) {
-          console.log(auth.statusText);
-          throw new Error(
-            'Authentication failed: Invalid credentials or user not found',
-          );
-        }
-
-        return auth.data;
       },
     }),
   ],
   callbacks: {
-    signIn: async ({ user, profile: _profile, account }) => {
+    signIn: async ({ user, profile, account }) => {
       if (account?.provider === 'google') {
         console.log('\nSIGN_IN: GOOGLE\n');
         if (user) {
@@ -93,23 +104,24 @@ export const authOptions: NextAuthOptions = {
               id: user.id,
             },
           });
-          if (!existingUser?.emailVerified) return false;
+          if (existingUser?.email == profile?.email) return false;
         }
       }
+
       if (account?.provider === 'credentials') {
         console.log('\nSIGN_IN: CREDENTIALS\n');
-        // if (user) {
-        //   const existingUser = await prisma.user.findUnique({
-        //     where: {
-        //       email: String(user?.email),
-        //     },
-        //   });
-        //   if (!existingUser) return false;
-        // }
+        if (user) {
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              email: String(user?.email),
+            },
+          });
+          if (!existingUser) return false;
+        }
       }
       return true;
     },
-    jwt: async ({ token, account, profile: _profile, user: _user }) => {
+    jwt: async ({ token, account, profile: _profile, user }) => {
       if (account?.provider === 'google') {
         console.log('\nJWT: GOOGLE\n');
         if (token) {
@@ -129,20 +141,30 @@ export const authOptions: NextAuthOptions = {
 
       if (account?.provider === 'credentials') {
         console.log('\nJWT: CREDENTIALS\n');
-        // if (token) {
-        //   const existingUser = await prisma.user.findUnique({
-        //     where: {
-        //       email: String(token.email),
-        //     },
-        //   });
+        if (token) {
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              email: String(token.email),
+            },
+          });
 
-        //   token.name = existingUser?.name;
-        //   token.email = existingUser?.email;
-        //   token.role = existingUser?.role;
-        //   token.accessToken = account.access_token;
-        // }
+          if (user) {
+            return { ...token, ...user };
+          }
 
-        return await refreshToken(token);
+          const expire: any = token.backendTokens;
+
+          if (new Date().getTime() < expire.expiresIn) {
+            return token;
+          }
+
+          token.name = existingUser?.name;
+          token.email = existingUser?.email;
+          token.role = existingUser?.role;
+          token.accessToken = account.access_token;
+
+          return await refreshToken(token);
+        }
       }
 
       return token;
@@ -162,7 +184,7 @@ export const authOptions: NextAuthOptions = {
     signIn: '/auth/sign-in',
     signOut: '/',
     error: '/auth/error',
-    newUser: '/auth/sign-up'
+    newUser: '/auth/sign-up',
   },
   debug: true,
   session: {
