@@ -11,8 +11,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
 import { env } from '@/@server/config/env-schema';
-import { api } from '@/lib/api';
 
+import { api } from '@/lib/api';
 import { Prisma } from '@prisma/client';
 import axios from 'axios';
 import prisma from './data-source';
@@ -101,10 +101,11 @@ export const authOptions: NextAuthOptions = {
         if (user) {
           const existingUser = await prisma.user.findUnique({
             where: {
-              id: user.id,
+              email: String(user.email),
             },
           });
-          if (existingUser?.email == profile?.email) return false;
+
+          if (existingUser?.email === profile?.email) return true;
         }
       }
 
@@ -119,6 +120,7 @@ export const authOptions: NextAuthOptions = {
           if (!existingUser) return false;
         }
       }
+
       return true;
     },
     jwt: async ({ token, account, profile: _profile, user }) => {
@@ -135,22 +137,35 @@ export const authOptions: NextAuthOptions = {
           token.email = existingUser?.email;
           token.role = existingUser?.role;
           token.accessToken = account.access_token;
+
+          return token;
         }
-        return token;
       }
 
       if (account?.provider === 'credentials') {
         console.log('\nJWT: CREDENTIALS\n');
-        if (token) {
+        if (token && user) {
           const existingUser = await prisma.user.findUnique({
             where: {
               email: String(token.email),
             },
           });
 
-          if (user) {
-            return { ...token, ...user };
-          }
+          token.name = existingUser?.name;
+          token.email = existingUser?.email;
+          token.role = existingUser?.role;
+          // token.accessToken = account.access_token;
+          console.log({ token, account, _profile, user })
+
+          return { ...token, ...user };
+        }
+
+        if (token) {
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              email: String(token.email),
+            },
+          });
 
           const expire: any = token.backendTokens;
 
@@ -161,22 +176,25 @@ export const authOptions: NextAuthOptions = {
           token.name = existingUser?.name;
           token.email = existingUser?.email;
           token.role = existingUser?.role;
-          token.accessToken = account.access_token;
+
+          console.log({ token, account, _profile, user })
 
           return await refreshToken(token);
         }
+        console.log({ token, account, profile: _profile, user })
       }
 
       return token;
     },
     session: async ({ session, token }) => {
       if (token) {
-        console.log('\nJWT: SESSION\n');
+        console.log('\nSESSION: CREDENTIALS\n');
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.image = token.picture;
       }
+
       return session;
     },
   },
@@ -185,12 +203,13 @@ export const authOptions: NextAuthOptions = {
     signOut: '/',
     error: '/auth/error',
     newUser: '/auth/sign-up',
+    verifyRequest: '/auth/sign-in'
   },
-  debug: true,
+  debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    // maxAge: 30 * 24 * 60 * 60, // 30 days
+    // updateAge: 24 * 60 * 60, // 24 hours
   },
   jwt: {
     secret: process.env.NEXTAUTH_JWT_SECRET,

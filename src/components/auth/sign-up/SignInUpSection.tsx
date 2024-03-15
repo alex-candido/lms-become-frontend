@@ -10,7 +10,7 @@ import Container from '@/components/layout/Container';
 import Section from '@/components/layout/Section';
 import Input from '@/components/ui/Input';
 
-import { api } from '@/lib/api';
+import { createUser } from '@/redux/actions/users/post-create-user';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
@@ -33,21 +33,18 @@ const SignInUpSection: React.FC<SignInUpSectionProps> = ({
     try {
       setIsLoading(true);
 
-      await api.post('/auth/register', {
-        email,
-        password,
-        username,
-        name,
-      });
+      await createUser({ name, email, password, username });
 
-      setIsLoading(false)
+      console.log({ name, email, password, username });
+
+      setIsLoading(false);
 
       toast.success('Account created.');
 
       await signIn('credentials', {
         email,
         password,
-      })
+      });
     } catch (error) {
       toast.error('Something went wrong');
     } finally {
@@ -68,7 +65,10 @@ const SignInUpSection: React.FC<SignInUpSectionProps> = ({
   );
 
   return (
-    <div className={twMerge('lms-sign-in-up-section h-full', className)} {...props}>
+    <div
+      className={twMerge('lms-sign-in-up-section h-full', className)}
+      {...props}
+    >
       <Container>
         <Section>
           <div className="sign-in-container w-full h-full flex justify-center items-center">

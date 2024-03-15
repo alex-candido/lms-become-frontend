@@ -1,0 +1,113 @@
+SIGN_IN: GOOGLE
+
+{
+  user: {
+    id: 'b050ffde-1d28-40dd-a74c-067d7a59934f',
+    name: 'Alex Candido',
+    email: 'alex.candido.tec@gmail.com',
+    emailVerified: null,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocIuJddmgD2z2sU97RVsTp-afQ2WISaGToriFA78oScicPzk=s96-c',
+    password: null,
+    role: 'USER',
+    isTwoFactorEnabled: false,
+    createdAt: 2024-03-04T02:07:58.713Z,
+    updatedAt: 2024-03-04T02:07:58.713Z
+  },
+  profile: {
+    iss: 'https://accounts.google.com',
+    azp: '849999729280-1g4c89oklir2gppqclv8r3hvfsvmpdkn.apps.googleusercontent.com',
+    aud: '849999729280-1g4c89oklir2gppqclv8r3hvfsvmpdkn.apps.googleusercontent.com',
+    sub: '117972141006709046014',
+    email: 'alex.candido.tec@gmail.com',
+    email_verified: true,
+    at_hash: 'zDqjNRxrPo6BW6wtK4oIMQ',
+    name: 'Alex Candido',
+    picture: 'https://lh3.googleusercontent.com/a/ACg8ocIuJddmgD2z2sU97RVsTp-afQ2WISaGToriFA78oScicPzk=s96-c',
+    given_name: 'Alex',
+    family_name: 'Candido',
+    locale: 'pt-BR',
+    iat: 1709695904,
+    exp: 1709699504
+  },
+  account: {
+    provider: 'google',
+    type: 'oauth',
+    providerAccountId: '117972141006709046014',
+    access_token: 'ya29.a0AfB_byDyZT3vfeFJPO8xHq5TXomdSPaNKQhFlYEGu7znHvaK3ikAnWVbp0dp08yBUUMbaa7MxADei-PJJkF6mjoxd_Q2s0V06h6qZM8ORGI_jW0xGxrpCZqiprHnsjFCfCB_zXZ0rIOBupzvloCWGbQ6M4bBnHul_2claCgYKAd8SARMSFQHGX2Mi-8M70_2yaMn94KCZkw7sUw0171',
+    expires_at: 1709699498,
+    scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid',
+    token_type: 'Bearer',
+    id_token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOTc3N2E2ODU5MDc3OThlZjc5NDA2MmMwMGI2NWQ2NmMyNDBiMWIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4NDk5OTk3MjkyODAtMWc0Yzg5b2tsaXIyZ3BwcWNsdjhyM2h2ZnN2bXBka24uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI4NDk5OTk3MjkyODAtMWc0Yzg5b2tsaXIyZ3BwcWNsdjhyM2h2ZnN2bXBka24uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTc5NzIxNDEwMDY3MDkwNDYwMTQiLCJlbWFpbCI6ImFsZXguY2FuZGlkby50ZWNAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ6RHFqTlJ4clBvNkJXNnd0SzRvSU1RIiwibmFtZSI6IkFsZXggQ2FuZGlkbyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJdUpkZG1nRDJ6MnNVOTdSVnNUcC1hZlEyV0lTYUdUb3JpRkE3OG9TY2ljUHprPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkFsZXgiLCJmYW1pbHlfbmFtZSI6IkNhbmRpZG8iLCJsb2NhbGUiOiJwdC1CUiIsImlhdCI6MTcwOTY5NTkwNCwiZXhwIjoxNzA5Njk5NTA0fQ.QJYFh8SLEYJbm5WSH8L16Vemw7R4rSbTYnsFjsXPwbosTIQ-u-29pWGpGQcbkOCg4hIBZmWKvd8mnvmZLW3lRoheVUg7lJw-KlbsdkFxp1rPWi5ipiwYOJCEFM3t7iK1g7mwcUqYipbcW1fwcAykw4v9dn2x4oIqK7ejJQaqWoWJsNG3Nx_wOKuUrxoJ_TwhSAKcoz7Y9q3Xq1RzyioeMm822rdyDMYLltx233Srhuotq_4LvT-5LVFUyH1eI6VPpb1uQSCjv0TIeOnX_UEHQn3_igZDY632DfIwy7j3_ewzxTrOOZ0TexQ3mxp_jwZJGtHp_QSOSdT0ciMiFkTu_w'
+  }
+}
+
+JWT: GOOGLE
+
+{
+  token: {
+    name: 'Alex Candido',
+    email: 'alex.candido.tec@gmail.com',
+    picture: 'https://lh3.googleusercontent.com/a/ACg8ocIuJddmgD2z2sU97RVsTp-afQ2WISaGToriFA78oScicPzk=s96-c',
+    sub: 'b050ffde-1d28-40dd-a74c-067d7a59934f'
+  },
+  account: {
+    provider: 'google',
+    type: 'oauth',
+    providerAccountId: '117972141006709046014',
+    access_token: 'ya29.a0AfB_byDyZT3vfeFJPO8xHq5TXomdSPaNKQhFlYEGu7znHvaK3ikAnWVbp0dp08yBUUMbaa7MxADei-PJJkF6mjoxd_Q2s0V06h6qZM8ORGI_jW0xGxrpCZqiprHnsjFCfCB_zXZ0rIOBupzvloCWGbQ6M4bBnHul_2claCgYKAd8SARMSFQHGX2Mi-8M70_2yaMn94KCZkw7sUw0171',
+    expires_at: 1709699498,
+    scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid',
+    token_type: 'Bearer',
+    id_token: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjZmOTc3N2E2ODU5MDc3OThlZjc5NDA2MmMwMGI2NWQ2NmMyNDBiMWIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4NDk5OTk3MjkyODAtMWc0Yzg5b2tsaXIyZ3BwcWNsdjhyM2h2ZnN2bXBka24uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI4NDk5OTk3MjkyODAtMWc0Yzg5b2tsaXIyZ3BwcWNsdjhyM2h2ZnN2bXBka24uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTc5NzIxNDEwMDY3MDkwNDYwMTQiLCJlbWFpbCI6ImFsZXguY2FuZGlkby50ZWNAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ6RHFqTlJ4clBvNkJXNnd0SzRvSU1RIiwibmFtZSI6IkFsZXggQ2FuZGlkbyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJdUpkZG1nRDJ6MnNVOTdSVnNUcC1hZlEyV0lTYUdUb3JpRkE3OG9TY2ljUHprPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkFsZXgiLCJmYW1pbHlfbmFtZSI6IkNhbmRpZG8iLCJsb2NhbGUiOiJwdC1CUiIsImlhdCI6MTcwOTY5NTkwNCwiZXhwIjoxNzA5Njk5NTA0fQ.QJYFh8SLEYJbm5WSH8L16Vemw7R4rSbTYnsFjsXPwbosTIQ-u-29pWGpGQcbkOCg4hIBZmWKvd8mnvmZLW3lRoheVUg7lJw-KlbsdkFxp1rPWi5ipiwYOJCEFM3t7iK1g7mwcUqYipbcW1fwcAykw4v9dn2x4oIqK7ejJQaqWoWJsNG3Nx_wOKuUrxoJ_TwhSAKcoz7Y9q3Xq1RzyioeMm822rdyDMYLltx233Srhuotq_4LvT-5LVFUyH1eI6VPpb1uQSCjv0TIeOnX_UEHQn3_igZDY632DfIwy7j3_ewzxTrOOZ0TexQ3mxp_jwZJGtHp_QSOSdT0ciMiFkTu_w'
+  },
+  _profile: {
+    iss: 'https://accounts.google.com',
+    azp: '849999729280-1g4c89oklir2gppqclv8r3hvfsvmpdkn.apps.googleusercontent.com',
+    aud: '849999729280-1g4c89oklir2gppqclv8r3hvfsvmpdkn.apps.googleusercontent.com',
+    sub: '117972141006709046014',
+    email: 'alex.candido.tec@gmail.com',
+    email_verified: true,
+    at_hash: 'zDqjNRxrPo6BW6wtK4oIMQ',
+    name: 'Alex Candido',
+    picture: 'https://lh3.googleusercontent.com/a/ACg8ocIuJddmgD2z2sU97RVsTp-afQ2WISaGToriFA78oScicPzk=s96-c',
+    given_name: 'Alex',
+    family_name: 'Candido',
+    locale: 'pt-BR',
+    iat: 1709695904,
+    exp: 1709699504
+  },
+  user: {
+    id: 'b050ffde-1d28-40dd-a74c-067d7a59934f',
+    name: 'Alex Candido',
+    email: 'alex.candido.tec@gmail.com',
+    emailVerified: null,
+    image: 'https://lh3.googleusercontent.com/a/ACg8ocIuJddmgD2z2sU97RVsTp-afQ2WISaGToriFA78oScicPzk=s96-c',
+    password: null,
+    role: 'USER',
+    isTwoFactorEnabled: false,
+    createdAt: 2024-03-04T02:07:58.713Z,
+    updatedAt: 2024-03-04T02:07:58.713Z
+  }
+}
+
+SESSION: CREDENTIALS
+
+{
+  session: {
+    user: {
+      name: 'Alex Candido',
+      email: 'alex.candido.tec@gmail.com',
+      image: 'https://lh3.googleusercontent.com/a/ACg8ocIuJddmgD2z2sU97RVsTp-afQ2WISaGToriFA78oScicPzk=s96-c'
+    },
+    expires: '2024-04-05T03:31:40.258Z'
+  },
+  token: {
+    name: 'Alex Candido',
+    email: 'alex.candido.tec@gmail.com',
+    picture: 'https://lh3.googleusercontent.com/a/ACg8ocIuJddmgD2z2sU97RVsTp-afQ2WISaGToriFA78oScicPzk=s96-c',
+    sub: 'b050ffde-1d28-40dd-a74c-067d7a59934f',
+    iat: 1709695900,
+    exp: 1712287900,
+    jti: '8ff23630-56ed-4a8d-9380-58da1467b9a6'
+  }
+}
